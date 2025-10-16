@@ -16,7 +16,7 @@ interface ResumeCardProps {
 }
 
 const ResumeCard: React.FC<ResumeCardProps> = ({
-  resume: { id, jobTitle, companyName, feedback },
+  resume: { id, jobTitle, companyName, feedback, imagePath  },
 }) => {
   return (
     <Link
@@ -32,6 +32,11 @@ const ResumeCard: React.FC<ResumeCardProps> = ({
         </div>
         <div className="flex-shrink-0">
           <ScoreCircle score={feedback.overallScore} />
+        </div>
+      </div>
+      <div className="gradient-border animate-in fade-in duration-1000">
+        <div className="w-full h-full">
+          <img src={imagePath} alt="resume" className="w-full h-[350px] max:h-[200px] object-cover object-top"/>
         </div>
       </div>
     </Link>
