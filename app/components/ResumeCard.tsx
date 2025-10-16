@@ -16,12 +16,12 @@ interface ResumeCardProps {
 }
 
 const ResumeCard: React.FC<ResumeCardProps> = ({
-  resume: { id, jobTitle, companyName, feedback, imagePath  },
+  resume: { id, jobTitle, companyName, feedback, imagePath },
 }) => {
   return (
     <Link
       to={`/resume/${id}`}
-      className="resume-card animate-in fade-in duration-1000 w-full block"
+      className="resume-card animate-in fade-in duration-1000 w-80 flex-shrink-0" // fixed width
     >
       <div className="resume-card-header">
         <div className="flex flex-col gap-2">
@@ -31,12 +31,16 @@ const ResumeCard: React.FC<ResumeCardProps> = ({
           <h3 className="text-lg break-words text-gray-500">{jobTitle}</h3>
         </div>
         <div className="flex-shrink-0">
-          <ScoreCircle score={feedback.overallScore} />
+          <ScoreCircle score={feedback?.overallScore || 0} />
         </div>
       </div>
       <div className="gradient-border animate-in fade-in duration-1000">
         <div className="w-full h-full">
-          <img src={imagePath} alt="resume" className="w-full h-[350px] max:h-[200px] object-cover object-top"/>
+          <img
+            src={imagePath}
+            alt="resume"
+            className="w-full h-[350px] max:h-[200px] object-cover object-top"
+          />
         </div>
       </div>
     </Link>

@@ -22,15 +22,16 @@ export default function Home() {
             <h1>Track Your Application and Resume Ratings</h1>
             <h2>Optimize your job applications with AI insights.</h2>
           </div>
-        </section>
+        
 
         {resume.length > 0 && (
-          <div className="resume-section">
+          <div className="resume-section flex gap-4 overflow-x-auto p-2">
             {resumes.map((resume: any) => (
               <ResumeCard key={resume.id} resume={resume} />
             ))}
           </div>
         )}
+        </section>
       </main>
     </>
   );
