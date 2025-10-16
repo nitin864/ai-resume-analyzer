@@ -56,7 +56,7 @@ ai-resume-analyzer/
 
 ## ⚙️ Installation & Setup
 
-### 1️⃣ Clone the repository
+ 
 ```bash
 git clone https://github.com/yourusername/ai-resume-analyzer.git
 cd ai-resume-analyzer
@@ -65,10 +65,10 @@ cd ai-resume-analyzer
 
 Once inside your project directory, install all required dependencies using **npm**:
 
-```bash
+ 
 npm install
 
 
 ⚡ Step 3: Run the Development Server
-```bash
+ 
 npm run dev
