@@ -21,7 +21,7 @@ const ResumeCard: React.FC<ResumeCardProps> = ({
   return (
     <Link
       to={`/resume/${id}`}
-      className="resume-card animate-in fade-in duration-1000 w-80 flex-shrink-0" // fixed width
+      className="resume-card animate-in fade-in duration-1000 w-80 flex-shrink-0" 
     >
       <div className="resume-card-header">
         <div className="flex flex-col gap-2">
@@ -47,4 +47,4 @@ const ResumeCard: React.FC<ResumeCardProps> = ({
   );
 };
 
-export default ResumeCard;
+export default ResumeCard; 
