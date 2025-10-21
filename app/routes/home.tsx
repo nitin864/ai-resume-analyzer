@@ -3,7 +3,7 @@ import type { Route } from "./+types/home";
 import { resumes } from "../../constants";
 import ResumeCard from "~/components/ResumeCard";
 import { usePuterStore } from "~/lib/puter";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router";
 
 import { useEffect } from "react";
 
@@ -19,10 +19,9 @@ export default function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!auth.isAuthenticated === false) {
-      navigate("/auth?next=/", { replace: true });
-    }
-  }, [auth, navigate]);
+  if (!auth.isAuthenticated) navigate('/auth?next=/', { replace: true });
+}, [auth.isAuthenticated, navigate]);
+
 
   return (
     <main className="bg-[url('/images/bg-main.svg')] bg-cover">
