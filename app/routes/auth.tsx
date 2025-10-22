@@ -1,25 +1,21 @@
 import { usePuterStore } from "~/lib/puter";
 import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 
-export const meta = () => ([
+export const meta = () => [
   { title: "Resumind | Auth" },
   { name: "description", content: "Log into your account" },
-]);
+];
 
 const Auth = () => {
   const { isLoading, auth } = usePuterStore();
   const location = useLocation();
+  const next = location.search.split("next=")[1];
   const navigate = useNavigate();
 
-  // Extract "next" from query string if it exists
-  const next = new URLSearchParams(location.search).get("next");
-
   useEffect(() => {
-    if (auth.isAuthenticated) {
-      navigate(next || "/home"); // ✅ go to "next" or fallback to /home
-    }
-  }, [auth.isAuthenticated, navigate, next]);
+    if (auth.isAuthenticated) navigate(next);
+  }, [auth.isAuthenticated, next]);
 
   return (
     <main className="bg-[url('/images/bg-auth.svg')] bg-cover min-h-screen flex items-center justify-center">
@@ -34,18 +30,23 @@ const Auth = () => {
               <button className="auth-button animate-pulse">
                 <p>Signing you in...</p>
               </button>
-            ) : auth.isAuthenticated ? (
-              <button className="auth-button" onClick={auth.signOut}>
-                <p>Log Out</p>
-              </button>
             ) : (
-              <button className="auth-button" onClick={auth.signIn}>
-                <p>Log In</p>
-              </button>
+              <>
+                {auth.isAuthenticated ? (
+                  <button className="auth-button" onClick={auth.signOut}>
+                    <p>Log Out</p>
+                  </button>
+                ) : (
+                  <button className="auth-button" onClick={auth.signIn}>
+                    <p>Log In</p>
+                  </button>
+                )}
+              </>
             )}
           </div>
         </section>
       </div>
+ 
     </main>
   );
 };

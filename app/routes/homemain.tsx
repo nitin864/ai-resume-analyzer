@@ -14,7 +14,7 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export default function Home() {
+export default function homemain() {
     const { auth, kv } = usePuterStore();
   const navigate = useNavigate();
  
