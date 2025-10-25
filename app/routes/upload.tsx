@@ -7,7 +7,7 @@ const upload = () => {
   const [statusText , setStatusText] = useState('');
   const [file , setFile] = useState<File | null>(null); 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-
+   
     
   }
     const handleFileSelect = (file: File | null) => {
