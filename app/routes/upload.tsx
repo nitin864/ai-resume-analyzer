@@ -1,8 +1,10 @@
+import type { ClassValue } from 'clsx';
 import React, { useState, type FormEvent } from 'react'
 import FIleUploader from '~/components/FIleUploader';
 import Navbar from '~/components/Navbar'
 import { convertPdfToImage } from '~/lib/pdf2img';
 import { usePuterStore } from '~/lib/puter';
+import { generateUUID } from '~/lib/utils';
 
 const upload = () => {
   const [isProcessing , setIsProcessing] = useState(false);
@@ -19,11 +21,24 @@ const upload = () => {
         setIsProcessing(true);
         setStatusText('Uploading your Resume...');
         const uploadedFile = await fs.upload([file]);
-      if(!uploadedFile) return setStatusText('Failed to upload your Resume!')
+        if(!uploadedFile) return setStatusText('Failed to upload your Resume!')
 
         setStatusText('converting to image...');
         const imageFile = await convertPdfToImage(file);
-  }
+        if(!imageFile.file) return setStatusText('Failed to Convert PDF to Image');
+        
+        setStatusText('Uploading the Image...');
+        const uploadedImage =  await fs.upload([imageFile.file]);
+        if(!uploadedImage) return setStatusText('Failed to upload Image');
+
+        setStatusText('Preparing Data....');
+        const uuid = generateUUID();
+
+        const data = {
+          id: uuid,
+          resumePath: uploadedFile.path
+        }
+  }     
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
        e.preventDefault();
@@ -32,11 +47,11 @@ const upload = () => {
        const formData = new FormData(form);
 
        const companyName = formData.get('company-name') as string;
-       const jobTitle = formData.get('job-title') as string; 
+       const jobTitle = formData.get('job-title') as string;  
        const jobDescription = formData.get('job-description') as string;
 
        if(!file) return;
-
+       
       handleAnalyzer({companyName , jobTitle , jobDescription , file});
   }
 
