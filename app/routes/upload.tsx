@@ -60,7 +60,7 @@ const upload = () => {
         
         const feedbackText = typeof feedback.message.content === 'string' 
         ? feedback.message.content 
-        : feedback.message.content[0].text
+        : feedback.message.content[0].text;
   }       
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
