@@ -183,7 +183,7 @@ export const resumes: Resume[] = [
   },
 ];
 
-export const AIResponseFormat = `
+export const DEFAULT_AI_RESPONSE_FORMAT = `
       interface Feedback {
       overallScore: number; //max 100
       ATS: {
@@ -230,11 +230,11 @@ export const AIResponseFormat = `
 export const prepareInstructions = ({
   jobTitle,
   jobDescription,
-  AIResponseFormat,
+  AIResponseFormat = DEFAULT_AI_RESPONSE_FORMAT,
 }: {
   jobTitle: string;
   jobDescription: string;
-  AIResponseFormat: string;
+  AIResponseFormat?: string; // optional now
 }) =>
   `You are an expert in ATS (Applicant Tracking System) and resume analysis.
   Please analyze and rate this resume and suggest how to improve it.

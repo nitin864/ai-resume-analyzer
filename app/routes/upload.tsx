@@ -1,5 +1,5 @@
 import type { ClassValue } from 'clsx';
-import { prepareInstructions } from 'constants';
+import {prepareInstructions} from "../../constants";
 import React, { useState, type FormEvent } from 'react'
 import { text } from 'stream/consumers';
 import FIleUploader from '~/components/FIleUploader';
@@ -14,7 +14,7 @@ const upload = () => {
   const [file , setFile] = useState<File | null>(null); 
   const {auth , isLoading , ai,fs,kv} = usePuterStore();  
 
-
+  
   const handleFileSelect = (file: File | null) => {
        setFile(file)
   }
@@ -56,9 +56,11 @@ const upload = () => {
             
         ); 
         
-        if (feedback) return setStatusText('Error analyzing Your Resume...')
+        if (!feedback) return setStatusText('Error analyzing Your Resume...')
         
-        const feedbackText = typeof feedback.message.content === 'string';
+        const feedbackText = typeof feedback.message.content === 'string' 
+        ? feedback.message.content 
+        : feedback.message.content[0].text
   }       
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -70,7 +72,7 @@ const upload = () => {
        const companyName = formData.get('company-name') as string;
        const jobTitle = formData.get('job-title') as string;  
        const jobDescription = formData.get('job-description') as string;
-
+       
        if(!file) return;
        
       handleAnalyzer({companyName , jobTitle , jobDescription , file});
