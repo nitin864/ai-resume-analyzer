@@ -32,9 +32,10 @@ const FileUploader = ({ onFileSelect }: FileUploaderProps) => {
         <input {...getInputProps()} />
 
         <div className="space-y-4 cursor-pointer">
+ 
           {file ? (
             <div
-              className="uploader-selected-file flex items-center space-x-3"
+              className="flex items-centere  space-3-x"
               onClick={(e) => e.stopPropagation()}
             >
               <img src="/images/pdf.png" alt="pdf" className="w-10 h-10" />
