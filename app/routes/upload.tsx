@@ -1,5 +1,7 @@
 import type { ClassValue } from 'clsx';
+import { prepareInstructions } from 'constants';
 import React, { useState, type FormEvent } from 'react'
+import { text } from 'stream/consumers';
 import FIleUploader from '~/components/FIleUploader';
 import Navbar from '~/components/Navbar'
 import { convertPdfToImage } from '~/lib/pdf2img';
@@ -36,9 +38,28 @@ const upload = () => {
 
         const data = {
           id: uuid,
-          resumePath: uploadedFile.path
+          resumePath: uploadedFile.path,
+          imagePath: uploadedImage.path,
+          companyName,
+          jobTitle,
+          jobDescription,
+          feedback: '',
         }
-  }     
+
+        await kv.set(`resume: ${uuid}` , JSON.stringify(data));
+        
+        setStatusText('Analyzing....');
+
+        const feedback = await ai.feedback(
+           uploadedFile.path,
+           prepareInstructions({jobTitle , jobDescription})
+            
+        ); 
+        
+        if (feedback) return setStatusText('Error analyzing Your Resume...')
+        
+        const feedbackText = typeof feedback.message.content === 'string';
+  }       
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
        e.preventDefault();
