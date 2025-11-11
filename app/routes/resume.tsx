@@ -1,5 +1,6 @@
-import { Link, useParams  } from 'react-router'
+import { data, Link, useNavigate, useParams  } from 'react-router'
 import React, { useState, useEffect } from "react";
+import { usePuterStore } from '~/lib/puter';
 
 export const meta = () => [
   { title: "Resume IQ | Review" },
@@ -9,9 +10,27 @@ export const meta = () => [
 const resume = () => {
 
   const {id}  = useParams();
-  
-  const useEffect(() => {
-        const
+  const {auth , isLoading  , kv ,fs } = usePuterStore();
+  const [imageUrl, setImageUrl] = useState('');
+  const [feedback , setFeedback] = useState('');
+  const [resumeUrl , setResumeUrl] = useState('');
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+        const loadResume = async() => {
+            const resume = await kv.get(`resume:${id}`);
+            if(!resume) return;
+
+            const data = JSON.parse(resume);
+
+            const resumeBlob = await fs.read(data.resumePath);
+            if(!resumeBlob) return;
+
+            const pdfBlob = new Blob([resumeBlob], {type: 'application/pdf'});
+            const resumeUrl = URL.createObjectURL(pdfBlob);
+            setResumeUrl(resumeUrl);
+        }
   } , [id])
 
   return (
