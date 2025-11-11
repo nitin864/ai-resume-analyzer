@@ -6,8 +6,7 @@ import { usePuterStore } from "~/lib/puter";
 import { convertPdfToImage } from "~/lib/pdf2img";
 import { generateUUID } from "~/lib/utils";
 import { prepareInstructions } from "../../constants";
-
-/* ------------------ Helper Functions (No console logs) ------------------ */
+import { useNavigate } from "react-router-dom"; // <- fixed import
 
 const getUploadPath = (item: any) => {
   try {
@@ -18,7 +17,11 @@ const getUploadPath = (item: any) => {
   }
 };
 
-async function arrayBufferToFile(ab: ArrayBuffer, filename = "converted.png", type = "image/png") {
+async function arrayBufferToFile(
+  ab: ArrayBuffer,
+  filename = "converted.png",
+  type = "image/png"
+) {
   try {
     const blob = new Blob([ab], { type });
     return new File([blob], filename, { type });
@@ -27,7 +30,11 @@ async function arrayBufferToFile(ab: ArrayBuffer, filename = "converted.png", ty
   }
 }
 
-async function toFile(input: unknown, filename = "converted.png", mime = "image/png"): Promise<File | null> {
+async function toFile(
+  input: unknown,
+  filename = "converted.png",
+  mime = "image/png"
+): Promise<File | null> {
   try {
     if (!input) return null;
 
@@ -35,32 +42,25 @@ async function toFile(input: unknown, filename = "converted.png", mime = "image/
     if (input instanceof Blob) return new File([input], filename, { type: input.type || mime });
     if (input instanceof ArrayBuffer) return await arrayBufferToFile(input, filename, mime);
 
-    // typed arrays
-    // @ts-ignore
-    if (typeof input === "object" && input && "buffer" in input && input.buffer instanceof ArrayBuffer) {
+    if (typeof input === "object" && input && "buffer" in input && (input as any).buffer instanceof ArrayBuffer) {
       // @ts-ignore
-      return await arrayBufferToFile(input.buffer, filename, mime);
+      return await arrayBufferToFile((input as any).buffer, filename, mime);
     }
 
-    // data URL string
     if (typeof input === "string" && input.startsWith("data:")) {
       const res = await fetch(input);
       const blob = await res.blob();
       return new File([blob], filename, { type: blob.type || mime });
     }
 
-    // shapes like { dataUrl } or { image }
-    // @ts-ignore
-    if (typeof input === "object" && input && "dataUrl" in input && typeof input.dataUrl === "string") {
-      // @ts-ignore
-      const res = await fetch(input.dataUrl);
+    if (typeof input === "object" && input && "dataUrl" in input && typeof (input as any).dataUrl === "string") {
+      const res = await fetch((input as any).dataUrl);
       const blob = await res.blob();
       return new File([blob], filename, { type: blob.type || mime });
     }
-    // @ts-ignore
-    if (typeof input === "object" && input && "image" in input && (input.image instanceof Blob || input.image instanceof File)) {
-      // @ts-ignore
-      const image = input.image as Blob;
+
+    if (typeof input === "object" && input && "image" in input && ((input as any).image instanceof Blob || (input as any).image instanceof File)) {
+      const image = (input as any).image as Blob;
       return new File([image], filename, { type: image.type || mime });
     }
 
@@ -70,10 +70,9 @@ async function toFile(input: unknown, filename = "converted.png", mime = "image/
   }
 }
 
-/* -------------------------- Main Upload Component -------------------------- */
-
 const Upload: React.FC = () => {
   const { fs, ai, kv } = usePuterStore();
+  const navigate = useNavigate(); // <- use hook inside component
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [statusText, setStatusText] = useState("");
@@ -172,30 +171,14 @@ const Upload: React.FC = () => {
       data.feedback = parsedFeedback;
       await kv.set(`resume:${uuid}`, JSON.stringify(data));
 
-      // ---- NEW: log everything to console instead of redirecting ----
-      setStatusText("Analysis complete — check console for results.");
-      // Log useful debug info (resume/image paths, DB record, AI response, parsed feedback)
-      // NOTE: per your original request: these are console logs for debugging — keep sensitive info in mind.
-      // eslint-disable-next-line no-console
-      console.log("=== Resume Analysis Result ===");
-      // eslint-disable-next-line no-console
-      console.log("UUID:", uuid);
-      // eslint-disable-next-line no-console
-      console.log("Stored metadata (kv):", data);
-      // eslint-disable-next-line no-console
-      console.log("Resume upload object / path:", resumePath, uploadedFile);
-      // eslint-disable-next-line no-console
-      console.log("Image upload object / path:", imagePath, uploadedImage);
-      // eslint-disable-next-line no-console
-      console.log("Raw AI response:", aiResponse);
-      // eslint-disable-next-line no-console
-      console.log("Parsed feedback:", parsedFeedback);
-      // If your AI returns ATS score or structured fields, they will appear in `parsedFeedback`.
-      // You can further inspect `parsedFeedback` here.
-      // -------------------------------------------------------------
+      setStatusText("Analysis complete, redirecting...");
+      console.log(data);
 
+      // navigate is available here (inside component scope)
+      navigate(`/resume/${uuid}`);
     } catch (err: any) {
       setStatusText(err?.message || "Something went wrong. Please try again.");
+      console.error(err);
     } finally {
       setIsProcessing(false);
     }
@@ -206,9 +189,9 @@ const Upload: React.FC = () => {
     const form = e.currentTarget;
     const formData = new FormData(form);
 
-    const companyName = (formData.get("company-name") as string) ?? "";
-    const jobTitle = (formData.get("job-title") as string) ?? "";
-    const jobDescription = (formData.get("job-description") as string) ?? "";
+    const companyName = String(formData.get("company-name") ?? "");
+    const jobTitle = String(formData.get("job-title") ?? "");
+    const jobDescription = String(formData.get("job-description") ?? "");
 
     if (!file) {
       setStatusText("Please upload a resume first.");
@@ -217,8 +200,6 @@ const Upload: React.FC = () => {
 
     handleAnalyze({ companyName, jobTitle, jobDescription, file });
   };
-
-  /* --------------------------- JSX Rendering --------------------------- */
 
   return (
     <main className="bg-[url('/images/bg-main.svg')] bg-cover">
