@@ -8,7 +8,7 @@ export const meta = () => [
 ];
 
 const resume = () => {
-
+  
   const {id}  = useParams();
   const {auth , isLoading  , kv ,fs } = usePuterStore();
   const [imageUrl, setImageUrl] = useState('');
