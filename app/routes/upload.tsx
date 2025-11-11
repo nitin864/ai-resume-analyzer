@@ -231,7 +231,7 @@ const Upload: React.FC = () => {
           {isProcessing ? (
             <>
               <h2>{statusText}</h2>
-              <img src="/images/resume-scan.gif" className="w-full" alt="processing" />
+              <img src="/images/resume-scan.gif" className="w-90 h-90" alt="processing" />
             </>
           ) : (
             <h2>{statusText || "Drop your resume for an ATS score and improvement tips"}</h2>
