@@ -16,7 +16,10 @@ const resume = () => {
   const [feedback , setFeedback] = useState('');
   const [resumeUrl , setResumeUrl] = useState('');
   const navigate = useNavigate();
-
+ 
+    useEffect(() => {
+    if(!isLoading && !auth.isAuthenticated) navigate(`/auth?next=/resume/${id}`);
+  }, [isLoading])
 
   useEffect(() => {
         const loadResume = async() => {
@@ -93,8 +96,14 @@ const resume = () => {
         <h2 className="text-2xl font-semibold mb-3 text-gray-800">
           Resume Review
         </h2>
-
-        
+       
+        {feedback ? (
+          <div className='flex flex-col gap-8 animate-in fade-in  duration-1000'>
+             AI Resume Insights (ATS-Ready)
+          </div>
+        ) : (
+          <img src='/images/resume-scan-2.gif' className='w-full'/>
+        )}        
       
       </section>
 
