@@ -2,7 +2,11 @@ import React from 'react'
 
 const Summary = () => {
   return (
-    <div>Summary</div>
+    <div className='rouded-2xl bg-white shadow-md w-full'>
+        <div>
+            
+        </div>
+    </div>
   )
 }
 
