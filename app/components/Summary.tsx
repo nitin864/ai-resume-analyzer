@@ -1,6 +1,15 @@
  
 import ScoreGauge from './ScoreGauge'
 
+
+const Category = ({ title, score} : {title: string , score: number }) => {
+    return(
+        <div className='resume-summary'>
+          {title} - {score}
+        </div>
+    )
+}
+
 const Summary = ({ feedback}: {feedback: Feedback}) => {
   return (
     <div className='rouded-2xl bg-white shadow-md w-full'>
@@ -13,7 +22,11 @@ const Summary = ({ feedback}: {feedback: Feedback}) => {
                 </p> 
              </div>
         </div>
-        
+      
+      <Category title="Tone & Style" score={feedback.toneAndStyle.score}/> 
+      <Category title="COntent" score={feedback.content.score}/> 
+      <Category title="Structure" score={feedback.structure.score}/> 
+      <Category title="Skills" score={feedback.skills.score}/> 
     </div>
   )
 }
