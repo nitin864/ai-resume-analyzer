@@ -1,4 +1,4 @@
-# 🧠 AI Resume Analyzer
+# 🧠 AI Resume Analyzer (dashboard under development)
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/yourusername/ai-resume-analyzer)
 ![GitHub last commit](https://img.shields.io/github/last-commit/yourusername/ai-resume-analyzer)
